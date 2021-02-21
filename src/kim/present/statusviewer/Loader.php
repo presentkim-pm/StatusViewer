@@ -53,6 +53,10 @@ final class Loader extends PluginBase{
     }
 
     protected function onDisable() : void{
+        $dataFolder = $this->getDataFolder();
+        if(!file_exists($dataFolder)){
+            mkdir($dataFolder);
+        }
         $this->getConfig()->save();
     }
 
