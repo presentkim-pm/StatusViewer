@@ -65,13 +65,11 @@ final class Loader extends PluginBase{
                         $tileCount = 0;
                         foreach($server->getWorldManager()->getWorlds() as $world){
                             ++$worldCount;
-                            foreach($world->getChunks() as $chunk){
+                            $entityCount += count($world->getEntities());
+                            foreach($world->getLoadedChunks() as $chunk){
                                 ++$chunkCount;
-
-                                $entityCount += count($chunk->getEntities());
                                 $tileCount += count($chunk->getTiles());
                             }
-                            $chunkCount += count($world->getChunks());
                         }
                         $statusMessage =
                             "Server: {$server->getName()}_v{$server->getApiVersion()} (PHP " . phpversion() . ")\n" .
