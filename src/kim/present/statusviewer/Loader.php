@@ -32,11 +32,16 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
+use pocketmine\utils\ObjectSet;
 use pocketmine\utils\Process;
 use pocketmine\utils\TextFormat;
 
 final class Loader extends PluginBase{
+    /** @phpstan-var ObjectSet<Player> */
+    private ObjectSet $viewers;
+
     protected function onEnable() : void{
+        $this->viewers = new ObjectSet();
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
             $server = $this->getServer();
 
@@ -74,14 +79,6 @@ final class Loader extends PluginBase{
         }), 2);
     }
 
-    protected function onDisable() : void{
-        $dataFolder = $this->getDataFolder();
-        if(!file_exists($dataFolder)){
-            mkdir($dataFolder);
-        }
-        $this->getConfig()->save();
-    }
-
     /** @param string[] $args */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
         if(!$sender instanceof Player){
@@ -100,14 +97,14 @@ final class Loader extends PluginBase{
     }
 
     public function isViewer(Player $player) : bool{
-        return (bool) $this->getConfig()->get($player->getXuid(), false);
+        return $this->viewers->contains($player);
     }
 
     public function addViewer(Player $player) : void{
-        $this->getConfig()->set($player->getXuid(), true);
+        $this->viewers->add($player);
     }
 
     public function removeViewer(Player $player) : void{
-        $this->getConfig()->remove($player->getXuid());
+        $this->viewers->remove($player);
     }
 }
