@@ -20,10 +20,7 @@
  *  ( . .) ♥
  *  c(")(")
  *
- * @noinspection PhpIllegalPsrClassPathInspection
- * @noinspection SpellCheckingInspection
- * @noinspection PhpDocMissingReturnTagInspection
- * @noinspection PhpDocSignatureInspection
+ * @noinspection PhpUnused
  */
 
 declare(strict_types=1);
