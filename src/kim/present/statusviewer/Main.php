@@ -36,7 +36,7 @@ use pocketmine\utils\ObjectSet;
 use pocketmine\utils\Process;
 use pocketmine\utils\TextFormat;
 
-final class Loader extends PluginBase{
+final class Main extends PluginBase{
     /** @phpstan-var ObjectSet<Player> */
     private ObjectSet $viewers;
 
