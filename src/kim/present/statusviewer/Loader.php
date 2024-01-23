@@ -45,36 +45,30 @@ final class Loader extends PluginBase{
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
             $server = $this->getServer();
 
-            /** @var string|null $statusMessage */
-            $statusMessage = null;
+            $recipients = array_filter($server->getOnlinePlayers(), [$this, "isViewer"]);
+            if(!empty($recipients)){
+                $threadCount = Process::getThreadCount();
+                $totalMemory = number_format(round((Process::getAdvancedMemoryUsage()[1] / 1024) / 1024, 2), 2);
 
-            foreach($server->getOnlinePlayers() as $player){
-                if($this->isViewer($player)){
-                    if($statusMessage === null){
-                        $threadCount = Process::getThreadCount();
-                        $totalMemory = number_format(round((Process::getAdvancedMemoryUsage()[1] / 1024) / 1024, 2), 2);
-
-                        $worldCount = 0;
-                        $chunkCount = 0;
-                        $entityCount = 0;
-                        $tileCount = 0;
-                        foreach($server->getWorldManager()->getWorlds() as $world){
-                            ++$worldCount;
-                            $entityCount += count($world->getEntities());
-                            foreach($world->getLoadedChunks() as $chunk){
-                                ++$chunkCount;
-                                $tileCount += count($chunk->getTiles());
-                            }
-                        }
-                        $statusMessage =
-                            "Server: {$server->getName()}_v{$server->getApiVersion()} (PHP " . phpversion() . ")\n" .
-                            "TPS: {$server->getTicksPerSecond()} ({$server->getTickUsage()}%)\n" .
-                            "Threads: $threadCount, Memory: $totalMemory MB\n" .
-                            "World($worldCount) Chunk: $chunkCount, Entity: $entityCount, Tile: $tileCount";
+                $worldCount = 0;
+                $chunkCount = 0;
+                $entityCount = 0;
+                $tileCount = 0;
+                foreach($server->getWorldManager()->getWorlds() as $world){
+                    ++$worldCount;
+                    $entityCount += count($world->getEntities());
+                    foreach($world->getLoadedChunks() as $chunk){
+                        ++$chunkCount;
+                        $tileCount += count($chunk->getTiles());
                     }
-
-                    $player->sendTip($statusMessage);
                 }
+                $statusMessage =
+                    "Server: {$server->getName()}_v{$server->getApiVersion()} (PHP " . phpversion() . ")\n" .
+                    "TPS: {$server->getTicksPerSecond()} ({$server->getTickUsage()}%)\n" .
+                    "Threads: $threadCount, Memory: $totalMemory MB\n" .
+                    "World($worldCount) Chunk: $chunkCount, Entity: $entityCount, Tile: $tileCount";
+
+                $server->broadcastTip($statusMessage, $recipients);
             }
         }), 2);
     }
