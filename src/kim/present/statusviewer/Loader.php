@@ -35,13 +35,6 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Process;
 use pocketmine\utils\TextFormat;
 
-use function count;
-use function file_exists;
-use function mkdir;
-use function number_format;
-use function phpversion;
-use function round;
-
 final class Loader extends PluginBase{
     protected function onEnable() : void{
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
@@ -71,8 +64,8 @@ final class Loader extends PluginBase{
                         $statusMessage =
                             "Server: {$server->getName()}_v{$server->getApiVersion()} (PHP " . phpversion() . ")\n" .
                             "TPS: {$server->getTicksPerSecond()} ({$server->getTickUsage()}%)\n" .
-                            "Threads: {$threadCount}, Memory: {$totalMemory} MB\n" .
-                            "World({$worldCount}) Chunk: {$chunkCount}, Entity: {$entityCount}, Tile: {$tileCount}";
+                            "Threads: $threadCount, Memory: $totalMemory MB\n" .
+                            "World($worldCount) Chunk: $chunkCount, Entity: $entityCount, Tile: $tileCount";
                     }
 
                     $player->sendTip($statusMessage);
