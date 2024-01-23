@@ -2,7 +2,7 @@
 name: StatusViewer
 main: kim\present\statusviewer\Loader
 version: 0.1.0
-api: [ 4.0.0 ]
+api: [ 5.0.0 ]
 author: PresentKim
 description: Utility to easily check the status of the server
 
